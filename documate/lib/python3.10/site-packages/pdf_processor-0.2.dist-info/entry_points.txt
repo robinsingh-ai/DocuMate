@@ -1,0 +1,2 @@
+[console_scripts]
+pdf_processor = pdf_processor.pdf_processor:process_pdf

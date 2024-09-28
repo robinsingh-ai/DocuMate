@@ -1,0 +1,35 @@
+Metadata-Version: 2.1
+Name: pdf_processor
+Version: 0.2
+Summary: A PDF processing package to convert PDF to images and adjust their brightness and contrast.
+Home-page: https://github.com/lvchenjia/pdf-toolkit
+Author: Xun Qin
+Author-email: lvchenjia2050@gmail.com
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.6
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: pymupdf
+Requires-Dist: Pillow
+
+# pdf_processor
+
+A PDF processing package to convert PDF to images and adjust their brightness and contrast.
+
+## Installation
+
+```bash
+pip install pdf_processor
+```
+
+## Usage
+
+```python
+from pdf_processor import process_pdf
+
+pdf_path = "input1.pdf"
+output_pdf_path = 'output.pdf'
+process_pdf(pdf_path, output_pdf_path, resolution=300, factor=1, contrast_factor=1)
+```
