@@ -9,7 +9,8 @@ interface PDFChatProps {
 }
 
 interface ChatMessage {
-  type: 'user' | 'bot' | 'error';
+  id: string;
+  type: 'user' | 'bot' | 'error' | 'loading';
   content: string;
 }
 
@@ -41,12 +42,19 @@ const PDFChat: React.FC<PDFChatProps> = ({ darkMode }) => {
   const handleAskQuestion = async () => {
     if (!question.trim()) return;
 
-    const newMessage: ChatMessage = {
+    const userMessage: ChatMessage = {
+      id: Date.now().toString(),
       type: 'user',
       content: question,
     };
 
-    setChatHistory(prev => [...prev, newMessage]);
+    const loadingMessage: ChatMessage = {
+      id: (Date.now() + 1).toString(),
+      type: 'loading',
+      content: '',
+    };
+
+    setChatHistory(prev => [...prev, userMessage, loadingMessage]);
     setQuestion('');
 
     try {
@@ -54,10 +62,23 @@ const PDFChat: React.FC<PDFChatProps> = ({ darkMode }) => {
         question,
         session_id: sessionId,
       });
-      setChatHistory(prev => [...prev, { type: 'bot', content: response.data.answer }]);
+      
+      setChatHistory(prev => 
+        prev.map(msg => 
+          msg.id === loadingMessage.id 
+            ? { ...msg, type: 'bot', content: response.data.answer }
+            : msg
+        )
+      );
     } catch (error) {
       console.error('Error asking question:', error);
-      setChatHistory(prev => [...prev, { type: 'error', content: 'Sorry, I encountered an error while processing your question.' }]);
+      setChatHistory(prev => 
+        prev.map(msg => 
+          msg.id === loadingMessage.id 
+            ? { ...msg, type: 'error', content: 'Sorry, I encountered an error while processing your question.' }
+            : msg
+        )
+      );
     }
   };
 
@@ -93,17 +114,27 @@ const PDFChat: React.FC<PDFChatProps> = ({ darkMode }) => {
   return (
     <div className="flex flex-col h-full">
       <div className="flex-grow overflow-y-auto mb-4 space-y-4 p-4">
-        {chatHistory.map((msg, index) => (
-          <div key={index} className={`flex ${msg.type === 'user' ? 'justify-end' : 'justify-start'}`}>
+        {chatHistory.map((msg) => (
+          <div key={msg.id} className={`flex ${msg.type === 'user' ? 'justify-end' : 'justify-start'}`}>
             <div className={`max-w-[70%] p-3 rounded-lg ${
               msg.type === 'user' 
                 ? `bg-blue-500 text-white`
                 : msg.type === 'error'
                 ? `bg-red-500 text-white`
+                : msg.type === 'loading'
+                ? `bg-gray-300 dark:bg-gray-600`
                 : `${darkMode ? 'bg-gray-700 text-white' : 'bg-gray-200 text-gray-800'}`
             }`}>
               {msg.type === 'error' && <AlertCircle className="inline-block mr-2" size={16} />}
-              {msg.content}
+              {msg.type === 'loading' ? (
+                <div className="flex space-x-2">
+                  <div className="w-2 h-2 rounded-full bg-gray-500 animate-bounce"></div>
+                  <div className="w-2 h-2 rounded-full bg-gray-500 animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                  <div className="w-2 h-2 rounded-full bg-gray-500 animate-bounce" style={{ animationDelay: '0.4s' }}></div>
+                </div>
+              ) : (
+                msg.content
+              )}
             </div>
           </div>
         ))}
