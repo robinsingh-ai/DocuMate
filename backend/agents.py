@@ -6,7 +6,7 @@ from tools.youtube_search_tools import YoutubeVideoSearchTool
 import os
 
 
-os.environ["SERPER_API_KEY"] = "af7534fc79c624fc0f0ca3a2cf79490a807790860552dbc02717c47bebbf5ad2"
+os.environ["SERPER_API_KEY"] = ""
 
 class ResearchAgents():
 
