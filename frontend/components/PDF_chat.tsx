@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-const PDFChat: React.FC = () => {
+interface PDFChatProps {
+  darkMode: boolean;
+}
+
+const PDFChat: React.FC<PDFChatProps> = ({ darkMode }) => {
   const [question, setQuestion] = useState<string>('');
-  const [answer, setAnswer] = useState<string>('');
-  const [sources, setSources] = useState<string[]>([]);
-  const [sessionId, setSessionId] = useState<string>('');
   const [chatHistory, setChatHistory] = useState<Array<{type: 'user' | 'bot', content: string}>>([]);
+  const [sessionId, setSessionId] = useState<string>('');
 
   useEffect(() => {
     setSessionId(`session_${Date.now()}`);
@@ -27,8 +29,6 @@ const PDFChat: React.FC = () => {
         question,
         session_id: sessionId,
       });
-      setAnswer(response.data.answer);
-      setSources(response.data.sources);
       setChatHistory(prev => [...prev, {type: 'bot', content: response.data.answer}]);
     } catch (error) {
       console.error('Error asking question:', error);
@@ -41,7 +41,11 @@ const PDFChat: React.FC = () => {
       <div className="flex-grow overflow-y-auto mb-4 space-y-4">
         {chatHistory.map((msg, index) => (
           <div key={index} className={`flex ${msg.type === 'user' ? 'justify-end' : 'justify-start'}`}>
-            <div className={`max-w-3/4 p-3 rounded-lg ${msg.type === 'user' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-800'}`}>
+            <div className={`max-w-3/4 p-3 rounded-lg ${
+              msg.type === 'user' 
+                ? `${darkMode ? 'bg-blue-600 text-white' : 'bg-blue-500 text-white'}`
+                : `${darkMode ? 'bg-gray-700 text-white' : 'bg-gray-200 text-gray-800'}`
+            }`}>
               {msg.content}
             </div>
           </div>
@@ -53,12 +57,12 @@ const PDFChat: React.FC = () => {
           value={question}
           onChange={handleQuestionChange}
           placeholder="Ask a question about the PDFs"
-          className="flex-grow p-2 border border-gray-300 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+          className={`flex-grow p-2 border ${darkMode ? 'border-gray-600 bg-gray-700 text-white' : 'border-gray-300 bg-white text-gray-800'} rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-400`}
           onKeyPress={(e) => e.key === 'Enter' && handleAskQuestion()}
         />
         <button
           onClick={handleAskQuestion}
-          className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-r-lg transition duration-300 ease-in-out"
+          className={`${darkMode ? 'bg-blue-600 hover:bg-blue-700' : 'bg-blue-500 hover:bg-blue-600'} text-white font-bold py-2 px-4 rounded-r-lg transition duration-300 ease-in-out`}
         >
           Ask
         </button>

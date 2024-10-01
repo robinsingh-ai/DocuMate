@@ -6,6 +6,8 @@ import "./globals.css";
 import Header from "@/components/Header";
 import { Toaster } from "react-hot-toast";
 import { RecoilRoot } from "recoil";
+import { ThemeProvider } from 'next-themes'
+
 
 
 const inter = Inter({ subsets: ["latin"] });
@@ -23,11 +25,15 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
+      <ThemeProvider attribute="class">
+
       <RecoilRoot>
         <Header />
         {children}
         <Toaster />
       </RecoilRoot>
+      </ThemeProvider>
+
       </body>
     </html>
   );

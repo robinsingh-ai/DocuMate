@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
-const PDFUpload: React.FC = () => {
+interface PDFUploadProps {
+  darkMode: boolean;
+}
+
+const PDFUpload: React.FC<PDFUploadProps> = ({ darkMode }) => {
   const [file, setFile] = useState<File | null>(null);
   const [uploadStatus, setUploadStatus] = useState<string>('');
 
@@ -34,15 +38,20 @@ const PDFUpload: React.FC = () => {
 
   return (
     <div className="mb-4">
-      <h2 className="text-xl font-bold">Upload PDF</h2>
-      <input type="file" onChange={handleFileChange} accept=".pdf" className="mb-2" />
+      <h2 className={`text-xl font-bold mb-2 ${darkMode ? 'text-white' : 'text-gray-700'}`}>Upload PDF</h2>
+      <input 
+        type="file" 
+        onChange={handleFileChange} 
+        accept=".pdf" 
+        className={`mb-2 ${darkMode ? 'text-white' : 'text-gray-800'}`} 
+      />
       <button
         onClick={handleUpload}
-        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+        className={`${darkMode ? 'bg-blue-600 hover:bg-blue-700' : 'bg-blue-500 hover:bg-blue-700'} text-white font-bold py-2 px-4 rounded transition duration-300 ease-in-out`}
       >
         Upload
       </button>
-      {uploadStatus && <p>{uploadStatus}</p>}
+      {uploadStatus && <p className={`mt-2 ${darkMode ? 'text-white' : 'text-gray-800'}`}>{uploadStatus}</p>}
     </div>
   );
 };

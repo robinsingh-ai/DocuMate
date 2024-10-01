@@ -7,6 +7,7 @@ type InputSectionProps = {
   placeholder: string;
   data: string[];
   setData: Dispatch<SetStateAction<string[]>>;
+  darkMode: boolean;
 };
 
 export default function InputSection({
@@ -14,6 +15,7 @@ export default function InputSection({
   placeholder,
   setData,
   data,
+  darkMode,
 }: InputSectionProps) {
   const [inputValue, setInputValue] = useState<string>("");
 
@@ -30,18 +32,18 @@ export default function InputSection({
 
   return (
     <div className="mb-6">
-      <h3 className="text-lg font-semibold mb-2 text-gray-700">{title}</h3>
+      <h3 className={`text-lg font-semibold mb-2 ${darkMode ? 'text-white' : 'text-gray-700'}`}>{title}</h3>
       <div className="flex items-center mb-2">
         <input
           type="text"
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
           placeholder={placeholder}
-          className="flex-grow p-2 border border-gray-300 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+          className={`flex-grow p-2 border ${darkMode ? 'border-gray-600 bg-gray-700 text-white' : 'border-gray-300 bg-white text-gray-800'} rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-400`}
         />
         <button
           onClick={handleAddClick}
-          className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-r-lg transition duration-300 ease-in-out"
+          className={`${darkMode ? 'bg-blue-600 hover:bg-blue-700' : 'bg-blue-500 hover:bg-blue-600'} text-white font-bold py-2 px-4 rounded-r-lg transition duration-300 ease-in-out`}
         >
           Add
         </button>
@@ -50,9 +52,9 @@ export default function InputSection({
         {data.map((item, index) => (
           <li
             key={index}
-            className="flex items-center justify-between p-2 bg-gray-100 rounded-lg"
+            className={`flex items-center justify-between p-2 ${darkMode ? 'bg-gray-700' : 'bg-gray-100'} rounded-lg`}
           >
-            <span className="text-gray-800">{item}</span>
+            <span className={darkMode ? 'text-gray-200' : 'text-gray-800'}>{item}</span>
             <button
               onClick={() => handleRemoveItem(index)}
               className="text-red-500 hover:text-red-700 transition duration-300 ease-in-out"
